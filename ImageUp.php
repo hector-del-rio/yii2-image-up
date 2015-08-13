@@ -83,10 +83,15 @@ class ImageUp extends InputWidget
         $previewOptions = ArrayHelper::merge([
             'id' => $this->id . '-thumb',
             'width' => $width,
-            'class' => 'img-responsive img-thumbnail',
         ], $this->previewOptions);
 
-        if (isset($this->model->attributeLabels()[$this->attribute])) {
+        if (empty($previewOptions['class'])) {
+            $previewOptions['class'] = '';
+        }
+
+        $previewOptions['class'] .= ' img-responsive img-thumbnail';
+
+        if (isset($this->model->attributeLabels()[$this->attribute]) and !isset($previewOptions['alt'])) {
             $previewOptions['alt'] = $this->model->attributeLabels()[$this->attribute];
         }
 
