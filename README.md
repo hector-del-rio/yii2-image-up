@@ -4,6 +4,8 @@ Simple and responsive image upload and preview for yii2 models using yii2-upload
 When using this extension in your ```ActiveForm``` an image preview of the specified attribute will be shown along with a button to change it.
 When a new image is selected, the preview will show the new image.
 
+![screen shot 2015-08-13 at 14 43 36](https://cloud.githubusercontent.com/assets/9391691/9249023/be77ec22-41c9-11e5-9571-7759438230c8.png)
+
 
 Installation
 ------------
