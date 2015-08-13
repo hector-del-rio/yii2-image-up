@@ -1,0 +1,32 @@
+{
+    "name": "hector-del-rio/yii2-image-up",
+    "description": "Image upload and preview for yii2 models using yii2-upload-behavior extension.",
+    "type": "yii2-extension",
+    "keywords": [
+        "yii2",
+        "upload",
+        "image",
+        "photo",
+        "picture",
+        "preview",
+        "thumb",
+        "model",
+        "behavior"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hector del Rio",
+            "email": "public.hector.del.rio@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*",
+        "yii-dream-team/yii2-upload-behavior": "^1.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "hectordelrio\\imageUp\\": ""
+        }
+    }
+}
