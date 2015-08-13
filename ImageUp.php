@@ -101,21 +101,32 @@ class ImageUp extends InputWidget
 
         echo $this->render('index', compact('image', 'fileInput'));
 
-        $this->getView()->registerJs("jQuery('#{$this->options['id']}').on('change', function() {
-            var selectedFile = this.files[0];
-            var thumbnail = jQuery('#{$previewOptions['id']}');
+        $this->getView()->registerJs(
+";(function($){
+    var fileInput = $('#{$this->options['id']}');
+    var preview = $('#{$previewOptions['id']}');
+    var button = fileInput.closest('.fileinput-button');
 
-            if (selectedFile) {
-                var reader = new FileReader();
-                reader.readAsDataURL(selectedFile);
-                reader.onload = function (e) {
-                    thumbnail.attr('src', e.target.result);
-                }
+    fileInput.on('change', function() {
+        var selectedFile = this.files[0];
 
-                thumbnail.show();
+        if (selectedFile) {
+            var reader = new FileReader();
+            reader.readAsDataURL(selectedFile);
+            reader.onload = function (e) {
+                preview.attr('src', e.target.result);
             }
 
-        });");
+            preview.show();
+        }
+    });
+
+    button.on('click', function() {
+        fileInput[0].click();
+    });
+
+})(jQuery);"
+        );
 
         $this->getView()->registerCss('.fileinput-button input { display: none; }');
     }

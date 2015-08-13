@@ -22,7 +22,7 @@
     ],
     "require": {
         "yiisoft/yii2": "*",
-        "yii-dream-team/yii2-upload-behavior": "1.*@dev"
+        "yii-dream-team/yii2-upload-behavior": "*@dev"
     },
     "autoload": {
         "psr-4": {
