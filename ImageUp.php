@@ -11,7 +11,7 @@ use Yii;
 class ImageUp extends InputWidget
 {
     /**
-     * @var array Options to be passed to the Html::img() function when generating the preview.
+     * @var array Options to be passed to the Html::tag() function when generating the preview.
      */
     public $previewOptions = [];
     /**
@@ -41,7 +41,7 @@ class ImageUp extends InputWidget
             $this->thumbsEnabled = isset($this->behavior->thumbs[$this->thumbProfileName]);
 
             if ($this->thumbsEnabled) {
-                $thumbFilename = $this->behavior->getThumbFilePath(null, $this->thumbProfileName);
+                $thumbFilename = $this->behavior->getThumbFilePath($this->attribute, $this->thumbProfileName);
 
                 if (!is_readable($thumbFilename)) {
                     Yii::warning("Unable to read thumb file: '{$thumbFilename}'");
@@ -61,9 +61,9 @@ class ImageUp extends InputWidget
         $width = null;
 
         if ($this->thumbsEnabled) {
-            $filename = $this->behavior->getThumbFilePath(null, $this->thumbProfileName);
+            $filename = $this->behavior->getThumbFilePath($this->attribute, $this->thumbProfileName);
         } else {
-            $filename = $this->behavior->getUploadedFilePath();
+            $filename = $this->behavior->getUploadedFilePath($this->attribute);
         }
 
         if (is_readable($filename)) {
@@ -96,21 +96,24 @@ class ImageUp extends InputWidget
         }
 
         if ($this->thumbsEnabled) {
-            $url = $this->behavior->getThumbFileUrl(null, $this->thumbProfileName);
+            $url = $this->behavior->getThumbFileUrl($this->attribute, $this->thumbProfileName);
         } else {
-            $url = $this->behavior->getImageFileUrl();
+            $url = $this->behavior->getImageFileUrl($this->attribute);
         }
 
-        $image = Html::img($url, $previewOptions);
-        $fileInput = Html::activeFileInput($this->model, $this->attribute, $this->options);
+        Html::addCssStyle($previewOptions, "background-image: url($url)");
+        $image = Html::tag('div', '', $previewOptions);
+        $fileInput = Html::activeFileInput($this->model, $this->attribute,
+            ['id' => $this->id . '-input'] + $this->options);
 
         echo $this->render('index', compact('image', 'fileInput'));
 
         $this->getView()->registerJs(
-";(function($){
-    var fileInput = $('#{$this->options['id']}');
+            ";(function($){
+    var widget = $('#{$this->id}');
+    var fileInput = widget.find('input[type=file]');
     var preview = $('#{$previewOptions['id']}');
-    var button = fileInput.closest('.fileinput-button');
+    var button = fileInput.closest('.image-up-input-button');
 
     fileInput.on('change', function() {
         var selectedFile = this.files[0];
@@ -119,20 +122,23 @@ class ImageUp extends InputWidget
             var reader = new FileReader();
             reader.readAsDataURL(selectedFile);
             reader.onload = function (e) {
-                preview.attr('src', e.target.result);
+                preview.css('background-image', 'url(' +  e.target.result + ')');
             }
 
             preview.show();
         }
     });
 
-    button.on('click', function() {
-        fileInput[0].click();
-    });
-
 })(jQuery);"
         );
 
-        $this->getView()->registerCss('.fileinput-button input { display: none; }');
+        $this->getView()->registerCss(<<<CSS
+#{$previewOptions['id']} {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+CSS
+        );
     }
 }
